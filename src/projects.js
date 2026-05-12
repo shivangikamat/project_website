@@ -13,6 +13,7 @@ export const projects = [
   {
     id: "cs2-pricing",
     title: "CS2 Skin Pricing Algorithm",
+    image: "/assets/price-empire.png",
     shortTitle: "CS2 Skins",
     github: "https://github.com/shivangikamat/pricing-algorithm",
     icon: CircleDollarSign,
@@ -31,6 +32,7 @@ export const projects = [
   {
     id: "strain",
     title: "STRAIN",
+    image: "/assets/STRAIN.png",
     shortTitle: "STRAIN",
     github: "https://github.com/shivangikamat/strain",
     live: "https://strain-frontend.onrender.com/",
@@ -50,6 +52,7 @@ export const projects = [
   {
     id: "dressing-room",
     title: "Interactive Dressing Room Portfolio",
+    image: "/assets/makeover.png",
     shortTitle: "Dressing Room",
     github: "https://github.com/shivangikamat/shivangi-portfolio-website",
     live: "https://www.shivangikamat.com",
@@ -69,6 +72,7 @@ export const projects = [
   {
     id: "lean-research",
     title: "AI for Theorem Proving",
+    image: "/assets/lean.png",
     shortTitle: "Lean Research",
     github: "https://github.com/shivangikamat/ai-for-theorem-proving",
     icon: GraduationCap,
@@ -87,6 +91,7 @@ export const projects = [
   {
     id: "marketmind",
     title: "MarketMind",
+    image: "/assets/marketmind.png",
     shortTitle: "MarketMind",
     github: "https://github.com/shivangikamat/hackonomics",
     icon: ChartCandlestick,
@@ -123,6 +128,7 @@ export const projects = [
   {
     id: "monte-carlo",
     title: "Monte Carlo Stock Simulator",
+    image: "/assets/montecarlo.png",
     shortTitle: "Monte Carlo",
     github: "https://github.com/shivangikamat/stock-simulator",
     icon: Cpu,
@@ -141,6 +147,7 @@ export const projects = [
   {
     id: "jumping-jack",
     title: "Jumping Jack",
+    image: "/assets/jumpingjack.png",
     shortTitle: "Jumping Jack",
     github: "https://github.com/shivangikamat/JumpingJack",
     icon: Gamepad2,

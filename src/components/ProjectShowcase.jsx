@@ -49,13 +49,19 @@ function SwipeProjectCard({ project, index, onNavigate }) {
       transition={{ delay: index * 0.05, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       onDragEnd={handleDragEnd}
     >
-      <div className="project-card-art" aria-hidden="true">
-        <span className={`art-piece ${pieces[0]}`} />
-        <span className={`art-piece ${pieces[1]}`} />
-        <span className={`art-piece ${pieces[2]}`} />
-        <div className="art-icon">
-          <Icon size={44} />
-        </div>
+      <div className="project-card-art">
+        {project.image ? (
+          <img className="project-card-image" src={project.image} alt={`${project.title} preview`} />
+        ) : (
+          <>
+            <span className={`art-piece ${pieces[0]}`} />
+            <span className={`art-piece ${pieces[1]}`} />
+            <span className={`art-piece ${pieces[2]}`} />
+            <div className="art-icon">
+              <Icon size={44} />
+            </div>
+          </>
+        )}
       </div>
 
       <div className="project-card-copy">
