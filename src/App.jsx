@@ -7,6 +7,12 @@ import { projects } from "./projects.js";
 export default function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [showDoor, setShowDoor] = useState(true);
+  const [skyTheme, setSkyTheme] = useState({
+    top: "#93a8f4",
+    mid: "#b7dcff",
+    lower: "#82d2d1",
+    water: "#25a9c1",
+  });
 
   useEffect(() => {
     const timer = window.setTimeout(() => setIsOpen(true), 900);
@@ -24,7 +30,13 @@ export default function App() {
   }, [isOpen]);
 
   return (
-    <main className="showcase-shell">
+    <motion.main
+      className="showcase-shell"
+      animate={{
+        background: `linear-gradient(180deg, rgba(255, 255, 255, 0.32), transparent 34%), linear-gradient(180deg, ${skyTheme.top} 0%, ${skyTheme.mid} 44%, ${skyTheme.lower} 72%, ${skyTheme.water} 100%)`,
+      }}
+      transition={{ duration: 0.7, ease: "easeInOut" }}
+    >
       <div className="showcase-sky" aria-hidden="true">
         <span className="soft-cloud cloud-a" />
         <span className="soft-cloud cloud-b" />
@@ -70,22 +82,10 @@ export default function App() {
             }}
             transition={{ duration: 1.05, ease: [0.76, 0, 0.24, 1] }}
           />
-          <motion.div
-            className="door-title"
-            variants={{
-              closed: { opacity: 1, y: 0 },
-              open: { opacity: 0, y: -24 },
-            }}
-            transition={{ duration: 0.45 }}
-          >
-            <p>Shivangi Kamat</p>
-            <h1>Project Showcase</h1>
-            <span>Click to enter</span>
-          </motion.div>
         </motion.div>
       ) : null}
 
-      <ProjectShowcase projects={projects} isOpen={isOpen} />
-    </main>
+      <ProjectShowcase projects={projects} isOpen={isOpen} onSkyChange={setSkyTheme} />
+    </motion.main>
   );
 }
