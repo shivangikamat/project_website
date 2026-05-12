@@ -49,9 +49,22 @@ function SwipeProjectCard({ project, index, onNavigate }) {
       transition={{ delay: index * 0.05, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       onDragEnd={handleDragEnd}
     >
-      <div className="project-card-art">
+      <div
+        className="project-card-art"
+        style={{ "--image-padding": project.imagePadding || "0" }}
+      >
         {project.image ? (
-          <img className="project-card-image" src={project.image} alt={`${project.title} preview`} />
+          <img
+            className="project-card-image"
+            src={project.image}
+            alt={`${project.title} preview`}
+            style={{
+              objectFit: project.imageFit || "cover",
+              objectPosition: project.imagePosition || "center",
+              transform: project.imageScale ? `scale(${project.imageScale})` : undefined,
+              transformOrigin: project.imageTransformOrigin || "center",
+            }}
+          />
         ) : (
           <>
             <span className={`art-piece ${pieces[0]}`} />

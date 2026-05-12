@@ -33,6 +33,8 @@ export const projects = [
     id: "strain",
     title: "STRAIN",
     image: "/assets/STRAIN.png",
+    imageFit: "cover",
+    imagePosition: "center 62%",
     shortTitle: "STRAIN",
     github: "https://github.com/shivangikamat/strain",
     live: "https://strain-frontend.onrender.com/",
@@ -110,6 +112,9 @@ export const projects = [
   {
     id: "ai-salon",
     title: "AI Hairstyle Salon",
+    image: "/assets/ai-salon.png",
+    imageFit: "cover",
+    imagePosition: "center",
     shortTitle: "AI Salon",
     github: "https://github.com/shivangikamat/hairstyle-match",
     icon: Scissors,
