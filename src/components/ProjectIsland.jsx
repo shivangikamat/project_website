@@ -39,29 +39,38 @@ export default function ProjectIsland({ projects, isOpen, onExplore, onSelect })
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
       >
         {!isOpen ? (
-          <button
-            className="island-hitbox"
-            type="button"
-            onClick={onExplore}
-            aria-label="Open project city"
-          />
-        ) : null}
-
-        <div className="mountains" aria-hidden="true">
-          <span className="mountain mountain-left" />
-          <span className="mountain mountain-mid" />
-          <span className="mountain mountain-right" />
-        </div>
-        <div className="island-ground" />
-        <div className="shoreline" />
-        <div className="water-ripple ripple-one" />
-        <div className="water-ripple ripple-two" />
-        <div className="path" />
-        <div className="city-details" aria-hidden="true">
-          {cityPieces.map((piece) => (
-            <span className={piece} key={piece} />
-          ))}
-        </div>
+          <>
+            <img
+              className="intro-island-svg"
+              src="/assets/insulosis_floating_island_scene.svg"
+              alt="Pastel floating island city with mountains, shops, beach, lighthouse, clouds, balloon, and sea"
+            />
+            <button
+              className="island-hitbox"
+              type="button"
+              onClick={onExplore}
+              aria-label="Open project city"
+            />
+          </>
+        ) : (
+          <>
+            <div className="mountains" aria-hidden="true">
+              <span className="mountain mountain-left" />
+              <span className="mountain mountain-mid" />
+              <span className="mountain mountain-right" />
+            </div>
+            <div className="island-ground" />
+            <div className="shoreline" />
+            <div className="water-ripple ripple-one" />
+            <div className="water-ripple ripple-two" />
+            <div className="path" />
+            <div className="city-details" aria-hidden="true">
+              {cityPieces.map((piece) => (
+                <span className={piece} key={piece} />
+              ))}
+            </div>
+          </>
+        )}
 
         {isOpen
           ? projects.map((project, index) => {
