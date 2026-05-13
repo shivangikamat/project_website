@@ -1,6 +1,6 @@
-import { motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, ExternalLink, Github } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowLeft, ArrowRight, ExternalLink, Github, MailOpen, X } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 
 const cardArt = {
   "cs2-pricing": ["coin", "chart", "shield"],
@@ -24,11 +24,17 @@ const skyThemes = [
   { top: "#f1b48b", mid: "#ffe0b6", lower: "#9fd3bd", water: "#36a7b7" },
 ];
 
-function SwipeProjectCard({ project, index, onNavigate }) {
+function SwipeProjectCard({ project, index, onNavigate, onOpen }) {
   const Icon = project.icon;
   const pieces = cardArt[project.id] ?? ["dots", "graph", "spark"];
+  const didDrag = useRef(false);
 
   const handleDragEnd = async (_event, info) => {
+    didDrag.current = Math.abs(info.offset.x) > 8;
+    window.setTimeout(() => {
+      didDrag.current = false;
+    }, 0);
+
     if (Math.abs(info.offset.x) < 120) {
       return;
     }
@@ -36,9 +42,30 @@ function SwipeProjectCard({ project, index, onNavigate }) {
     onNavigate(info.offset.x > 0 ? -1 : 1);
   };
 
+  const handleOpen = (event) => {
+    if (didDrag.current || event.target.closest("a")) {
+      return;
+    }
+
+    onOpen(project);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.target.closest("a")) {
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onOpen(project);
+    }
+  };
+
   return (
     <motion.article
       className={`project-card ${project.roomTheme}`}
+      role="button"
+      tabIndex={0}
       drag="x"
       dragConstraints={{ left: -220, right: 220 }}
       dragElastic={0.28}
@@ -47,7 +74,9 @@ function SwipeProjectCard({ project, index, onNavigate }) {
       whileDrag={{ scale: 1.015, cursor: "grabbing" }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ delay: index * 0.05, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      onClick={handleOpen}
       onDragEnd={handleDragEnd}
+      onKeyDown={handleKeyDown}
     >
       <div
         className="project-card-art"
@@ -103,13 +132,114 @@ function SwipeProjectCard({ project, index, onNavigate }) {
   );
 }
 
+function ProjectEnvelope({ project, onClose }) {
+  if (!project) {
+    return null;
+  }
+
+  const sections = [
+    project.deepDive?.context ? ["Context", project.deepDive.context] : null,
+    project.deepDive?.aim ? ["Aim", project.deepDive.aim] : null,
+    project.deepDive?.objective ? ["Objective", project.deepDive.objective] : null,
+  ].filter(Boolean);
+  const technicalDepth = project.deepDive?.technicalDepth ?? project.details;
+
+  return (
+    <motion.div
+      className="envelope-overlay"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.22 }}
+      onClick={onClose}
+    >
+      <motion.article
+        className={`project-envelope ${project.roomTheme}`}
+        initial={{ opacity: 0, y: 36, scale: 0.92, rotateX: -12 }}
+        animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+        exit={{ opacity: 0, y: 24, scale: 0.94, rotateX: 10 }}
+        transition={{ type: "spring", stiffness: 180, damping: 22 }}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button className="envelope-close" type="button" onClick={onClose} aria-label="Close project details">
+          <X size={20} />
+        </button>
+
+        <div className="envelope-flap" aria-hidden="true" />
+
+        <div className="envelope-header">
+          <span>
+            <MailOpen size={18} />
+            Project note
+          </span>
+          <p>{project.shortTitle}</p>
+          <h2>{project.title}</h2>
+        </div>
+
+        <div className="envelope-body">
+          {sections.map(([label, value]) => (
+            <section className="envelope-section" key={label}>
+              <h3>{label}</h3>
+              <p>{value}</p>
+            </section>
+          ))}
+
+          <section className="envelope-section envelope-technical">
+            <h3>Technical Depth</h3>
+            <ul>
+              {technicalDepth.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </section>
+
+          <div className="envelope-skills" aria-label="Project skills">
+            {project.tech.map((skill) => (
+              <i key={skill}>{skill}</i>
+            ))}
+          </div>
+
+          <div className="project-links envelope-links">
+            <a href={project.github} target="_blank" rel="noreferrer">
+              <Github size={18} />
+              GitHub
+            </a>
+            {project.live ? (
+              <a href={project.live} target="_blank" rel="noreferrer">
+                <ExternalLink size={18} />
+                Live
+              </a>
+            ) : null}
+          </div>
+        </div>
+      </motion.article>
+    </motion.div>
+  );
+}
+
 export default function ProjectShowcase({ projects, isOpen, onSkyChange }) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [selectedProject, setSelectedProject] = useState(null);
   const carouselProjects = [...projects, ...projects.slice(0, 2)];
 
   useEffect(() => {
     onSkyChange?.(skyThemes[activeIndex % skyThemes.length]);
   }, [activeIndex, onSkyChange]);
+
+  useEffect(() => {
+    if (!selectedProject) {
+      return undefined;
+    }
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        setSelectedProject(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [selectedProject]);
 
   const navigate = (direction) => {
     setActiveIndex((current) => {
@@ -155,10 +285,17 @@ export default function ProjectShowcase({ projects, isOpen, onSkyChange }) {
               index={index}
               key={`${project.id}-${index}`}
               onNavigate={navigate}
+              onOpen={setSelectedProject}
             />
           ))}
         </motion.div>
       </div>
+
+      <AnimatePresence>
+        {selectedProject ? (
+          <ProjectEnvelope project={selectedProject} onClose={() => setSelectedProject(null)} />
+        ) : null}
+      </AnimatePresence>
     </motion.section>
   );
 }
